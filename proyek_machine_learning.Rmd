@@ -1,0 +1,76 @@
+---
+title: "Prediksi Kualitas Gerakan dengan Data Akselerometer"
+author: "Nama Anda"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pendahuluan
+
+Dalam proyek ini, kita akan menggunakan data dari akselerometer yang dipasang di sabuk, lengan bawah, lengan atas, dan dumbbell untuk memprediksi bagaimana cara seseorang melakukan latihan angkat beban. Target prediksi adalah variabel `classe`.
+
+## Memuat Paket yang Diperlukan
+
+```{r}
+library(caret)
+library(randomForest)
+library(dplyr)
+```
+
+## Memuat dan Membersihkan Data
+
+```{r}
+training_url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+testing_url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+
+train_data <- read.csv(url(training_url), na.strings = c("NA", "#DIV/0!", ""))
+test_data <- read.csv(url(testing_url), na.strings = c("NA", "#DIV/0!", ""))
+
+# Menghapus kolom dengan banyak NA
+train_data <- train_data[, colSums(is.na(train_data)) == 0]
+train_data <- train_data[, -c(1:7)]  # menghapus kolom metadata
+test_data <- test_data[, colnames(test_data) %in% colnames(train_data)]
+```
+
+## Membagi Data untuk Pelatihan dan Validasi
+
+```{r}
+set.seed(123)
+inTrain <- createDataPartition(train_data$classe, p = 0.7, list = FALSE)
+training <- train_data[inTrain, ]
+validation <- train_data[-inTrain, ]
+```
+
+## Membangun Model Random Forest
+
+```{r}
+set.seed(123)
+model_rf <- randomForest(classe ~ ., data = training)
+```
+
+## Evaluasi Model dengan Data Validasi
+
+```{r}
+prediksi_validasi <- predict(model_rf, validation)
+confusionMatrix(prediksi_validasi, validation$classe)
+```
+
+## Memprediksi Data Pengujian
+
+```{r}
+hasil_prediksi <- predict(model_rf, test_data)
+hasil_prediksi
+```
+
+## Kesimpulan
+
+Model Random Forest yang dibangun menunjukkan akurasi tinggi dalam memprediksi kualitas gerakan angkat beban berdasarkan data akselerometer. Model ini cukup andal dan dapat digunakan untuk memprediksi 20 kasus uji akhir.
+
+## Referensi
+
+- Dataset: [Groupware HAR Dataset](http://web.archive.org/web/20161224072740/http:/groupware.les.inf.puc-rio.br/har)
+- Coursera Project: Practical Machine Learning
