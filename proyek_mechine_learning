@@ -1,0 +1,16 @@
+# Machine Learning Project - Predicting Exercise Movements
+
+This project was completed as part of the Coursera Machine Learning course, focusing on predictive modeling using accelerometer data collected from wearable devices.
+
+## Project Objective
+The goal of this project is to predict the manner in which participants performed a barbell lift exercise. Using data collected from accelerometers on the belt, arm, forearm, and dumbbell, the target variable "classe" was modeled.
+
+## Files Included
+- `proyek_machine_learning.Rmd` — R Markdown file containing all code and explanation of the analysis process.
+- `proyek_machine_learning.html` — Compiled HTML version of the R Markdown file for easy viewing.
+
+## How to View
+Open the `.html` file directly in your browser, or knit the `.Rmd` file again using RStudio.
+
+## Data Source
+http://groupware.les.inf.puc-rio.br/har
